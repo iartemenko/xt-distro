@@ -72,6 +72,12 @@ def base_cpu_count():
     import multiprocessing
     return multiprocessing.cpu_count()
 
+def base_update_conf_value(conf_file, key, value):
+    f = open(conf_file, "a")
+    f.write(key + " " + value + "\n")
+    f.close()
+
+
 base_update_conf_value() {
     local config_file=$1
     local key=$2
@@ -92,6 +98,13 @@ base_adjust_conf_value() {
     local value=$3
     local adjustment=$4
 
+    if [ -z "${config_file}" ] ; then
+        config_file=${S}/build/conf/local.conf
+        key=require
+        value=build-versions.inc
+        adjustment=""
+    fi
+   
     echo "${key} ${adjustment} "\"${value}\" >> "${config_file}"
 }
 
